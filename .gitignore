@@ -1,0 +1,23 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# VSCode (nếu có dùng song song)
+.vscode/
+
+# Build output
+target/
+out/
+build/
+
+# Logs
+*.log
+
+# OS-specific
+.DS_Store
+Thumbs.db
+
+# Không bao giờ track .git bên trong thư mục con
+**/.git
