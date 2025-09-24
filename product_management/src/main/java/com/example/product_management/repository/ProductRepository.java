@@ -1,64 +1,87 @@
 package com.example.product_management.repository;
 
 import com.example.product_management.entity.Product;
+import com.example.product_management.utils.ConnectionUtil;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.stream.Collectors;
+import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class ProductRepository implements IProductRepository {
 
-    private final Map<Long, Product> store = new LinkedHashMap<>();
-    private final AtomicLong seq = new AtomicLong(0);
-
-    public ProductRepository() {
-        save(new Product(null, "iPhone 15", new BigDecimal("999.00"), "Flagship", "Apple"));
-        save(new Product(null, "Galaxy S24", new BigDecimal("899.00"), "Android high-end", "Samsung"));
-        save(new Product(null, "ThinkPad X1", new BigDecimal("1599.00"), "Business laptop", "Lenovo"));
-        save(new Product(null, "SamSung", new BigDecimal("1575.00"), "Ipad", "Lenovo"));
-        save(new Product(null, "Oppo", new BigDecimal("1799.00"), "Phone", "Lenovo"));
-    }
-
     @Override
     public List<Product> findAll() {
-        return new ArrayList<>(store.values());
+        try (Session session = ConnectionUtil.sessionFactory.openSession()) {
+            return session.createQuery("from Product", Product.class).getResultList();
+        }
     }
 
     @Override
     public Optional<Product> findById(Long id) {
-        return Optional.ofNullable(store.get(id));
+        try (Session session = ConnectionUtil.sessionFactory.openSession()) {
+            Product p = session.find(Product.class, id);
+            return Optional.ofNullable(p);
+        }
     }
 
     @Override
     public Product save(Product p) {
-        long id = seq.incrementAndGet();
-        p.setId(id);
-        store.put(id, p);
-        return p;
+        Transaction transaction = null;
+        try (Session session = ConnectionUtil.sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            session.persist(p);
+            transaction.commit();
+            return p;
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw e;
+        }
     }
 
     @Override
     public Product update(Long id, Product p) {
-        if (!store.containsKey(id)) return null;
-        p.setId(id);
-        store.put(id, p);
-        return p;
+        Transaction transaction = null;
+        try (Session session = ConnectionUtil.sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            p.setId(id);
+            Product merged = (Product) session.merge(p);
+            transaction.commit();
+            return merged;
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw e;
+        }
     }
 
     @Override
     public void deleteById(Long id) {
-        store.remove(id);
+        Transaction transaction = null;
+        try (Session session = ConnectionUtil.sessionFactory.openSession()) {
+            transaction = session.beginTransaction();
+            Product toDelete = session.find(Product.class, id);
+            if (toDelete != null) {
+                session.remove(toDelete);
+            }
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
+            throw e;
+        }
     }
 
     @Override
     public List<Product> searchByName(String q) {
-        if (q == null || q.isBlank()) return findAll();
-        String kw = q.trim().toLowerCase();
-        return store.values().stream()
-                .filter(pr -> pr.getName() != null && pr.getName().toLowerCase().contains(kw))
-                .collect(Collectors.toList());
+        try (Session session = ConnectionUtil.sessionFactory.openSession()) {
+            if (q == null || q.isBlank()) {
+                return session.createQuery("from Product", Product.class).getResultList();
+            }
+            return session.createQuery(
+                            "from Product p where lower(p.name) like :kw", Product.class)
+                    .setParameter("kw", "%" + q.toLowerCase().trim() + "%")
+                    .getResultList();
+        }
     }
 }
