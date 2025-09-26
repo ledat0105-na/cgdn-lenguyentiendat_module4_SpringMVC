@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Products</title></head>
+<body>
+<h2>Products</h2>
+
+<form th:action="@{/products}" method="get">
+    <input type="text" name="q" th:value="${q}" placeholder="Search by name">
+    <button type="submit">Search</button>
+    <a th:href="@{/products}">Clear</a>
+</form>
+
+<p><a th:href="@{/products/new}">+ New Product</a></p>
+
+<table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+        <th>Manufacturer</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="p : ${products}">
+        <td th:text="${p.id}">1</td>
+        <td><a th:href="@{/products/{id}(id=${p.id})}" th:text="${p.name}">Name</a></td>
+        <td th:text="${p.price}">0.00</td>
+        <td th:text="${p.manufacturer}">MFR</td>
+        <td>
+            <a th:href="@{/products/{id}/edit(id=${p.id})}">Edit</a>
+            <form th:action="@{/products/{id}/delete(id=${p.id})}" method="post" style="display:inline">
+                <button type="submit" onclick="return confirm('Delete?')">Delete</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
