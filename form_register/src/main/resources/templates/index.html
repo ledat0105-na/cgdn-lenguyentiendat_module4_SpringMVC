@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Registration Form</title>
+  <style>
+    body {max-width: 720px; margin: 30px auto; font-family: Arial, sans-serif;}
+    label {display:block; margin-top:10px;}
+    input {width:100%; padding:8px; box-sizing:border-box;}
+    .error {color: #c00; font-size: 0.9em;}
+    .actions {margin-top: 14px;}
+  </style>
+</head>
+<body>
+<h2>Registration Form</h2>
+
+<form th:action="@{/register}" th:object="${user}" method="post" novalidate>
+  <div>
+    <label>Firstname</label>
+    <input th:field="*{firstname}" placeholder="Firstname (5-45)">
+    <div class="error" th:errors="*{firstname}"></div>
+  </div>
+
+  <div>
+    <label>Lastname</label>
+    <input th:field="*{lastname}" placeholder="Lastname (5-45)">
+    <div class="error" th:errors="*{lastname}"></div>
+  </div>
+
+  <div>
+    <label>Phone number</label>
+    <input th:field="*{phonenumber}" placeholder="0xxxxxxxxx (10-11 digits)">
+    <div class="error" th:errors="*{phonenumber}"></div>
+  </div>
+
+  <div>
+    <label>Age</label>
+    <input type="number" th:field="*{age}" min="18" placeholder=">= 18">
+    <div class="error" th:errors="*{age}"></div>
+  </div>
+
+  <div>
+    <label>Email</label>
+    <input type="email" th:field="*{email}" placeholder="you@example.com">
+    <div class="error" th:errors="*{email}"></div>
+  </div>
+
+  <div class="actions">
+    <button type="submit">Register</button>
+    <button type="reset">Reset</button>
+  </div>
+</form>
+</body>
+</html>

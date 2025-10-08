@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Danh sách bài hát</title>
+  <style>
+    body {max-width: 960px; margin: 24px auto; font-family: Arial;}
+    table {width: 100%; border-collapse: collapse;}
+    th, td {border: 1px solid #eee; padding: 8px;}
+    a.button, button {padding: 6px 10px; border: 1px solid #ccc; border-radius: 6px; text-decoration: none;}
+  </style>
+</head>
+<body>
+<h2>Danh sách bài hát</h2>
+<p><a class="button" th:href="@{/songs/new}">+ Thêm bài hát</a></p>
+
+<table>
+  <thead>
+  <tr>
+    <th>ID</th>
+    <th>Tên bài hát</th>
+    <th>Nghệ sĩ</th>
+    <th>Thể loại</th>
+    <th>Thao tác</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr th:each="s : ${songs}">
+    <td th:text="${s.id}"></td>
+    <td th:text="${s.name}"></td>
+    <td th:text="${s.artist}"></td>
+    <td th:text="${s.genre}"></td>
+    <td>
+      <a th:href="@{|/songs/${s.id}/edit|}" class="button">Sửa</a>
+      <form th:action="@{|/songs/${s.id}/delete|}" method="post" style="display:inline">
+        <button onclick="return confirm('Xóa bài hát này?')">Xóa</button>
+      </form>
+    </td>
+  </tr>
+  </tbody>
+</table>
+</body>
+</html>
