@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+  <meta charset="UTF-8"><title>Lỗi</title>
+  <style>body{max-width:720px;margin:24px auto;font-family:Arial} .err{color:#c00}</style>
+</head>
+<body>
+<h2 class="err">Có lỗi xảy ra</h2>
+<p th:text="${message}">Thông báo lỗi</p>
+<p><a th:href="@{/books}">← Quay về danh sách sách</a></p>
+</body>
+</html>

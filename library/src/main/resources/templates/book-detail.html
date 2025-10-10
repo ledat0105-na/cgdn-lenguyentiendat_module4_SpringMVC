@@ -1,0 +1,22 @@
+<!-- templates/book-detail.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+  <meta charset="UTF-8"><title>Chi tiết sách</title>
+  <style>body{max-width:720px;margin:24px auto;font-family:Arial} .btn{padding:6px 10px;border:1px solid #ccc;border-radius:6px}</style>
+</head>
+<body>
+<p><a th:href="@{/books}">← Quay lại danh sách</a></p>
+<h2 th:text="${book.title}">Sách</h2>
+<p><b>Còn lại:</b> <span th:text="${book.quantity}"></span></p>
+
+<form th:action="@{|/books/${book.id}/borrow|}" method="post">
+  <button class="btn" type="submit">Mượn sách</button>
+</form>
+
+<div th:if="${ticket != null}" style="margin-top:16px; border:1px solid #eee; padding:12px; border-radius:8px">
+  <p><b>Mã mượn của bạn:</b> <span style="font-size:20px" th:text="${ticket.code}"></span></p>
+  <p>Giữ mã này để trả sách.</p>
+</div>
+</body>
+</html>

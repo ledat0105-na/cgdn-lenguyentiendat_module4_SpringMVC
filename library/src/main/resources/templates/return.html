@@ -1,0 +1,22 @@
+<!-- templates/return.html -->
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+  <meta charset="UTF-8"><title>Trả sách</title>
+  <style>body{max-width:720px;margin:24px auto;font-family:Arial} .msg{padding:10px;border:1px solid #eee;border-radius:6px}</style>
+</head>
+<body>
+<p><a th:href="@{/books}">← Về danh sách</a></p>
+<h2>Trả sách</h2>
+<form th:action="@{/return}" method="post">
+  <label>Nhập mã mượn (5 chữ số):</label>
+  <input name="code" maxlength="5" required pattern="[0-9]{5}" title="Vui lòng nhập đúng 5 chữ số" placeholder="VD: 12345" aria-label="Mã mượn 5 chữ số" inputmode="numeric">
+  <button type="submit">Trả sách</button>
+</form>
+
+<div th:if="${message}" class="msg" style="margin-top:14px" th:text="${message}"></div>
+<div th:if="${book}" class="msg" style="margin-top:14px">
+  Đầu sách: <b th:text="${book.title}"></b> — Số lượng còn lại: <b th:text="${book.quantity}"></b>
+</div>
+</body>
+</html>
