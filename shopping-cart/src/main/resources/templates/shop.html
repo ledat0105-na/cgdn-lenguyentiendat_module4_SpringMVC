@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shop</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      padding: 40px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    table {
+      width: 80%;
+      margin: 0 auto;
+      border-collapse: collapse;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    th, td {
+      padding: 15px;
+      text-align: center;
+      border-bottom: 1px solid #ccc;
+    }
+
+    th {
+      background-color: #007bff;
+      color: white;
+    }
+
+    a.button {
+      display: inline-block;
+      padding: 6px 12px;
+      background-color: #28a745;
+      color: white;
+      text-decoration: none;
+      border-radius: 5px;
+    }
+
+    a.button:hover {
+      background-color: #218838;
+    }
+
+    .cart-link {
+      display: block;
+      text-align: right;
+      margin-bottom: 20px;
+    }
+
+    .cart-link a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .cart-link a:hover {
+      text-decoration: underline;
+    }
+    
+    .name-btn {
+      display: inline-block;
+      padding: 8px 14px;
+      background-color: #ffffff;
+      color: #007bff;
+      border: 1px solid #007bff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .name-btn:hover {
+      background-color: #007bff;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+<div class="cart-link">
+  <a href="/shopping-cart">🛍️ Your Cart</a>
+</div>
+
+<h1>Product List</h1>
+
+<div th:if="${message}" style="width:80%;margin:0 auto 16px; padding:10px 14px; border-radius:6px; background:#e7f5ff; color:#0b7285; border:1px solid #a5d8ff;">
+  <span th:text="${message}">Đã thêm sản phẩm vào giỏ hàng!</span>
+  <a href="/shopping-cart" style="float:right; color:#0b7285; text-decoration:none;">Xem giỏ hàng</a>
+  <div style="clear:both"></div>
+</div>
+
+<table>
+  <tr>
+    <th>Ảnh minh họa</th>
+    <th>Tên sản phẩm</th>
+    <th>Giá</th>
+    <th>Thêm vào giỏ hàng</th>
+  </tr>
+  <th:block th:each="product : ${products}">
+    <tr>
+      <td>
+        <img th:if="${product.imageUrl}" th:src="${product.imageUrl}" alt="img" style="height:60px"/>
+      </td>
+      <td>
+        <a class="name-btn" th:href="@{/product/{id}(id=${product.id})}" th:text="${product.name}"></a>
+      </td>
+      <td th:text="${#numbers.formatDecimal(product.price, 0, 0)} + ' đ'"></td>
+      <td>
+        <a class="button" th:href="@{/add/{id}(id=${product.id}, action='list')}">Thêm vào giỏ</a>
+      </td>
+    </tr>
+  </th:block>
+</table>
+</body>
+</html>

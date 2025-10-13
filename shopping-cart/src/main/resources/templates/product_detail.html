@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Chi tiết sản phẩm</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f7f7f7; padding: 30px; }
+    .container { max-width: 980px; margin: 0 auto; background: #fff; padding: 24px; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,.06); }
+    .header { font-size: 22px; font-weight: 700; margin-bottom: 16px; color: #2c3e50; }
+    .content { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+    .image { background: #fafafa; border: 1px solid #eee; border-radius: 8px; height: 360px; display:flex; align-items:center; justify-content:center; color:#999; overflow:hidden; }
+    .price { font-size: 20px; color: #e74c3c; font-weight: 700; margin: 10px 0; }
+    .badge { display:inline-block; background:#ff4757; color:#fff; padding:2px 8px; border-radius:4px; font-size:12px; margin-left:8px; }
+    .features { background:#fff9e6; border:1px solid #ffe8a1; border-radius:8px; padding:12px 16px; }
+    .features li { margin: 6px 0; }
+    .actions { margin-top: 16px; display:flex; gap:12px; }
+    .btn { background:#ff6b6b; color:#fff; text-decoration:none; padding:10px 16px; border-radius:6px; border:none; cursor:pointer; }
+    .btn.secondary { background:#3498db; }
+    a { color:#3498db; text-decoration:none; }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <span th:text="${product.name}">Sản phẩm</span>
+    <span class="badge">NEW!</span>
+  </div>
+  <div class="content">
+    <div class="image">
+      <img th:if="${product.imageUrl != null and !#strings.isEmpty(product.imageUrl)}" th:src="${product.imageUrl}" alt="image" style="max-height:100%; max-width:100%"/>
+      <span th:if="${product.imageUrl == null or #strings.isEmpty(product.imageUrl)}">Hình sản phẩm</span>
+    </div>
+    <div>
+      <div>Mã SP: <strong th:text="${product.id}">#</strong></div>
+      <div class="price" th:text="${#numbers.formatDecimal(product.price, 0, 0)} + ' đ'">350.000 đ</div>
+      <p th:text="${product.description}">Mô tả sản phẩm...</p>
+      <ul class="features">
+        <li>Tặng banner/thiệp miễn phí</li>
+        <li>Giao gấp trong 2 giờ (nội thành)</li>
+        <li>Cam kết hoa tươi 3 ngày</li>
+      </ul>
+      <div class="actions">
+        <form th:action="@{/add/{id}(id=${product.id}, action='show')}" method="get">
+          <button class="btn" type="submit">Thêm vào giỏ hàng</button>
+        </form>
+        <a class="btn secondary" href="/shopping-cart">Xem giỏ hàng</a>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:20px"><a href="/shopping-cart">← Quay lại giỏ hàng</a></div>
+  <div style="margin-top:4px"><a href="/shop">← Quay lại danh sách sản phẩm</a></div>
+  <div style="margin-top:10px">Số lượng trong giỏ: <strong th:text="${quantity}">1</strong></div>
+  
+</div>
+</body>
+</html>
+
+

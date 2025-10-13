@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Thanh toán</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f5f7fb; padding: 30px; }
+    .container { max-width: 980px; margin: 0 auto; background: #fff; padding: 20px 24px; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,.06); }
+    h1 { font-size: 22px; color: #2d3436; }
+    table { width: 100%; border-collapse: collapse; margin-top: 16px; }
+    th, td { padding: 12px; border-bottom: 1px solid #eaeaea; text-align: left; }
+    th { background: #fafafa; }
+    .total { text-align: right; font-size: 18px; font-weight: 700; color: #e74c3c; }
+    .actions { margin-top: 16px; text-align: right; }
+    .btn { background:#2ecc71; border:none; color:#fff; padding:10px 16px; border-radius:6px; cursor:pointer; }
+    a { color:#3498db; text-decoration:none; }
+  </style>
+  
+</head>
+<body>
+<div class="container">
+  <h1>03. Thanh toán</h1>
+  <table>
+    <tr>
+      <th>Sản phẩm</th>
+      <th>Đơn giá</th>
+      <th>Số lượng</th>
+      <th>Thành tiền</th>
+    </tr>
+    <tr th:each="entry : ${cart.products}">
+      <td th:text="${entry.key.name}">Sản phẩm</td>
+      <td th:text="${#numbers.formatDecimal(entry.key.price, 0, 0)} + ' đ'"></td>
+      <td th:text="${entry.value}"></td>
+      <td th:text="${#numbers.formatDecimal(entry.key.price * entry.value, 0, 0)} + ' đ'"></td>
+    </tr>
+    <tr>
+      <td colspan="3" class="total">Tổng cộng</td>
+      <td class="total" th:text="${#numbers.formatDecimal(cart.countTotalPayment(), 0, 0)} + ' đ'"></td>
+    </tr>
+  </table>
+
+  <div class="actions">
+    <form th:action="@{/checkout}" method="post" style="display:inline-block">
+      <button type="submit" class="btn">Xác nhận thanh toán</button>
+    </form>
+    <a href="/shopping-cart" style="margin-left:12px">Quay lại giỏ hàng</a>
+  </div>
+</div>
+</body>
+</html>
+
+
