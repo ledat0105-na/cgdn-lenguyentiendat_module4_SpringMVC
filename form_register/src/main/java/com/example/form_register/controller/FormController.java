@@ -1,5 +1,6 @@
 package com.example.form_register.controller;
 
+import com.example.form_register.dto.UserDTO;
 import com.example.form_register.model.User;
 import com.example.form_register.service.IUserService;
 import jakarta.validation.Valid;
@@ -17,19 +18,19 @@ public class FormController {
 
     @GetMapping({"/", "/register"})
     public String showForm(Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("user", new UserDTO());
         return "index";
     }
 
     @PostMapping("/register")
-    public String submit(@Valid @ModelAttribute("user") User user,
+    public String submit(@Valid @ModelAttribute("user") UserDTO userDTO,
                          BindingResult result,
                          Model model) {
         if (result.hasErrors()) {
             return "index";
         }
         try {
-            User saved = userService.register(user);
+            User saved = userService.register(userDTO);
             model.addAttribute("user", saved);
             return "result";
         } catch (IllegalArgumentException ex) {

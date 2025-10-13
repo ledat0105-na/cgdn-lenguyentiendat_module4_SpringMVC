@@ -1,5 +1,6 @@
 package com.example.form_register.service;
 
+import com.example.form_register.dto.UserDTO;
 import com.example.form_register.model.User;
 import com.example.form_register.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +23,23 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User register(User user) {
-        if (repo.existsByEmailIgnoreCase(user.getEmail())) {
+    public User register(UserDTO userDTO) {
+        if (repo.existsByEmailIgnoreCase(userDTO.getEmail())) {
             throw new IllegalArgumentException("Email already exists");
         }
-        if (repo.existsByPhonenumber(user.getPhonenumber())) {
+        if (repo.existsByPhonenumber(userDTO.getPhonenumber())) {
             throw new IllegalArgumentException("Phone number already exists");
         }
+        
+        // Convert DTO to Entity
+        User user = User.builder()
+                .firstname(userDTO.getFirstname())
+                .lastname(userDTO.getLastname())
+                .phonenumber(userDTO.getPhonenumber())
+                .age(userDTO.getAge())
+                .email(userDTO.getEmail())
+                .build();
+                
         return repo.save(user);
     }
 }
