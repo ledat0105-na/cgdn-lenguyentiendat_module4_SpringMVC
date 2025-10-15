@@ -66,18 +66,18 @@
         <ul class="pagination">
             <li class="page-item" th:classappend="${postPage.first}? 'disabled'">
                 <a class="page-link"
-                   th:href="@{|/posts?page=${postPage.number-1}&size=${postPage.size}&q=${q}&cat=${cat}&dir=${dir}|}">Prev</a>
+                   th:href="@{/posts(page=${postPage.number-1},size=${postPage.size},q=${q},cat=${cat},dir=${dir})}">Prev</a>
             </li>
             <li class="page-item"
                 th:each="i : ${#numbers.sequence(0, postPage.totalPages-1)}"
                 th:classappend="${i==postPage.number}? 'active'">
                 <a class="page-link"
                    th:text="${i+1}"
-                   th:href="@{|/posts?page=${i}&size=${postPage.size}&q=${q}&cat=${cat}&dir=${dir}|}">1</a>
+                   th:href="@{/posts(page=${i},size=${postPage.size},q=${q},cat=${cat},dir=${dir})}">1</a>
             </li>
             <li class="page-item" th:classappend="${postPage.last}? 'disabled'">
                 <a class="page-link"
-                   th:href="@{|/posts?page=${postPage.number+1}&size=${postPage.size}&q=${q}&cat=${cat}&dir=${dir}|}">Next</a>
+                   th:href="@{/posts(page=${postPage.number+1},size=${postPage.size},q=${q},cat=${cat},dir=${dir})}">Next</a>
             </li>
         </ul>
     </nav>
