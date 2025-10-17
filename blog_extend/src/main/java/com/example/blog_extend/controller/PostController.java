@@ -22,7 +22,7 @@ public class PostController {
     @GetMapping({"/", "/posts"})
     public String listPosts(Model model,
                             @RequestParam(value = "page", defaultValue = "0") int page,
-                            @RequestParam(value = "size", defaultValue = "5") int size,
+                            @RequestParam(value = "size", defaultValue = "20") int size,
                             @RequestParam(value = "q", required = false) String q,
                             @RequestParam(value = "cat", required = false) Long catId,
                             @RequestParam(value = "dir", defaultValue = "desc") String dir) {

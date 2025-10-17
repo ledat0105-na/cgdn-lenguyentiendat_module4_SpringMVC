@@ -31,24 +31,24 @@
 <main class="container py-3">
     <h1 class="mb-3">Danh sách bài viết</h1>
 
-    <form class="row g-2 mb-3" method="get">
+    <form id="searchForm" class="row g-2 mb-3" method="get">
         <div class="col-auto">
-            <input class="form-control" type="text" name="q" placeholder="Tìm theo tiêu đề"
+            <input id="qInput" class="form-control" type="text" name="q" placeholder="Tìm theo tiêu đề"
                    th:value="${q}">
         </div>
         <div class="col-auto">
-            <select class="form-select" name="dir">
+            <select id="dirSelect" class="form-select" name="dir">
                 <option th:value="desc" th:selected="${dir}=='desc'">Mới nhất</option>
                 <option th:value="asc" th:selected="${dir}=='asc'">Cũ trước</option>
             </select>
         </div>
         <div class="col-auto">
-            <button class="btn btn-primary">Lọc</button>
+            <button class="btn btn-primary" type="submit">Tìm</button>
             <a class="btn btn-outline-secondary" th:href="@{/posts}">Xóa lọc</a>
         </div>
     </form>
 
-    <div class="list-group mb-3">
+    <div id="postList" class="list-group mb-3">
         <a class="list-group-item list-group-item-action"
            th:each="p : ${postPage.content}"
            th:href="@{|/posts/${p.id}|}">
@@ -60,6 +60,10 @@
                 <span class="badge text-bg-secondary" th:text="${p.category.name}">Category</span>
             </div>
         </a>
+    </div>
+
+    <div class="text-center" th:if="${!postPage.last}">
+        <button id="loadMoreBtn" class="btn btn-outline-primary">Tải thêm</button>
     </div>
 
     <nav th:if="${postPage.totalPages > 1}">
@@ -87,6 +91,56 @@
     </div>
 </main>
 
+<script src="/webjars/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+<script>
+    (function() {
+        let currentPage = /*[[${postPage.number}]]*/ 0;
+        const size = /*[[${postPage.size}]]*/ 20;
+        let currentQuery = /*[['${q}']]]*/ '';
+        let currentDir = /*[['${dir}']]]*/ 'desc';
+
+        function renderItems(items) {
+            const html = items.map(p => `
+                <a class="list-group-item list-group-item-action" href="/posts/${p.id}">
+                    <div class="d-flex justify-content-between">
+                        <h5>${p.title}</h5>
+                        <small>${(p.createdAt ?? '').toString().replace('T',' ')}</small>
+                    </div>
+                    <div><span class="badge text-bg-secondary">${p.categoryName ?? ''}</span></div>
+                </a>`).join('');
+            return html;
+        }
+
+        function fetchPage(page, append) {
+            const params = { page, size, dir: currentDir };
+            if (currentQuery && currentQuery.trim().length > 0) params.q = currentQuery.trim();
+            $.get('/api/posts', params, function(res) {
+                if (!append) {
+                    $('#postList').html(renderItems(res.content));
+                } else {
+                    $('#postList').append(renderItems(res.content));
+                }
+                currentPage = res.page;
+                if (res.last) {
+                    $('#loadMoreBtn').hide();
+                } else {
+                    $('#loadMoreBtn').show();
+                }
+            });
+        }
+
+        $('#searchForm').on('submit', function(e) {
+            e.preventDefault();
+            currentQuery = $('#qInput').val();
+            currentDir = $('#dirSelect').val();
+            fetchPage(0, false);
+        });
+
+        $('#loadMoreBtn').on('click', function() {
+            fetchPage(currentPage + 1, true);
+        });
+    })();
+</script>
 </body>
 </html>
