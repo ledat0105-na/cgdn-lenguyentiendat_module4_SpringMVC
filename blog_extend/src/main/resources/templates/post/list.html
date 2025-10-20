@@ -94,7 +94,6 @@
 <script src="/webjars/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 <script>
-    (function() {
         let currentPage = /*[[${postPage.number}]]*/ 0;
         const size = /*[[${postPage.size}]]*/ 20;
         let currentQuery = /*[['${q}']]]*/ '';
@@ -140,7 +139,6 @@
         $('#loadMoreBtn').on('click', function() {
             fetchPage(currentPage + 1, true);
         });
-    })();
 </script>
 </body>
 </html>
